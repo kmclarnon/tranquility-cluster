@@ -1,15 +1,16 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
 # check if kubeadm is already installed
-IS_INSTALLED=$(dpkg-query -f='${Status}' kubeadm 2>/dev/null | grep -c "ok installed")
-if $IS_INSTALLED -eq 1 then
+echo "Checking if kubeadm is installed"
+if dpkg-query -W -f='${Status}' kubeadm | grep "ok installed"; then
   echo "Kubeadm is already installed, skipping setup"
   exit 0
 fi
 
 # Add kubernetes packages to apt-get
+echo "Preparing to install kubeadm"
 FILE=apt-key.gpg
 if test -f "$FILE"; then
   echo "Found $FILE, removing before continuing"
