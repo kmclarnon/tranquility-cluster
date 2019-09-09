@@ -28,3 +28,6 @@ apt-get update
 
 # Install kubeadm
 apt-get install kubeadm -y
+
+echo "Cleaning up"
+rm $FILE
