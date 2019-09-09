@@ -3,9 +3,11 @@
 set -e
 
 # check if docker is installed
-IS_INSTALLED=$(dpkg-query -f='${Status}' docker.io 2>/dev/null | grep -c "ok installed")
-if $IS_INSTALLEd -eq 1 then
-  echo "Docker is already installed, skipping setup"
+if dpkg-query -W -f='${Status}' docker.io | grep "ok installed"; then
+  echo "Docker is already installed, skipping"
+  # ensure it's started
+  systemctl enable docker
+  systemctl start docker
   exit 0
 fi
 
