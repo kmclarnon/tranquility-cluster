@@ -6,6 +6,9 @@ set -e
 systemctl enable kubelet
 systemctl start kubelet
 
+# initialize kubernetes
+kubeadm init --apiserver-advertise-address=192.168.1.10 --pod-network-cidr=10.244.0.0/16
+
 # setup config for kubectl
 mkdir -p $HOME/.kube
 cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
