@@ -6,6 +6,7 @@ set -e
 IS_INSTALLED=$(dpkg-query -f='${Status}' kubeadm 2>/dev/null | grep -c "ok installed")
 if $IS_INSTALLED -eq 1 then
   echo "Kubeadm is already installed, skipping setup"
+  exit 0
 fi
 
 # Add kubernetes packages to apt-get
