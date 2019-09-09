@@ -25,4 +25,4 @@ echo "Updating packages"
 apt-get update
 
 # Install kubeadm
-
+apt-get install kubeadm -y
