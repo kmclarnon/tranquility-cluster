@@ -1,0 +1,75 @@
+#!/bin/bash
+
+set -e
+
+install_kubernetes() {
+  # check if kubeadm is already installed
+  echo "Checking if kubeadm is installed"
+  if dpkg-query -W -f='${Status}' kubeadm | grep "ok installed"; then
+    echo "Kubeadm is already installed, skipping setup"
+    exit 0
+  fi
+
+  # Add kubernetes packages to apt-get
+  echo "Preparing to install kubeadm"
+  FILE=apt-key.gpg
+  if test -f "$FILE"; then
+    echo "Found $FILE, removing before continuing"
+    rm $FILE
+  fi
+
+  echo "Downloading google cloud gpg key"
+  wget https://packages.cloud.google.com/apt/doc/apt-key.gpg
+  echo "Installing key into package manager"
+  apt-key add apt-key.gpg
+  echo "Adding kubernetes repository to package manager"
+  apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+  echo "Updating packages"
+  apt-get update
+
+  # Install kubeadm
+  apt-get install kubeadm -y
+}
+
+install_docker() {
+  # check if docker is installed
+  echo "Checking if Docker is installed"
+  if dpkg-query -W -f='${Status}' docker.io | grep "ok installed"; then
+    echo "Docker is already installed, enabling Docker service"
+    # ensure it's started
+    systemctl enable docker
+    systemctl start docker
+    exit 0
+  fi
+
+  # install docker
+  echo "Installing Docker"
+  apt-get install docker.io -y
+
+  # start it up
+  echo "Enabling Docker service"
+  systemctl enable docker
+  systemctl start docker
+}
+
+configure_master() {
+  # enable kubelet service
+  echo "Enable kubelet service"
+  systemctl enable kubelet
+  systemctl start kubelet
+
+  # initialize kubernetes
+  echo "Initializing kubernetes api server"
+  kubeadm init --apiserver-advertise-address=192.168.1.10 --pod-network-cidr=10.244.0.0/16
+
+  # setup config for kubectl
+  echo "Setting up kubectl on this node"
+  mkdir -p $HOME/.kube
+  cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  chown $(id -u):$(id -g) $HOME/.kube/config
+
+  # enable flannel network
+  echo "Enabling pod network"
+  kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+}
+
