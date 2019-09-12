@@ -16,7 +16,7 @@ done
 
 # Execute setup of our master node
 echo "Executing setup on master node: $MASTER"
-ssh root@$MASTER ARG1="1" ARG2="$MASTER" 'bash -s' < ./setup-scripts/init-node.sh
+ssh root@$MASTER ARG1="1" ARG2="$MASTER" 'bash -s' < ./init-node.sh
 
 # capture our join command
 JOIN_CMD=$(ssh root@$MASTER 'bash -s' < ./setup-scripts/print-token.sh)
@@ -30,7 +30,7 @@ chown $(id -u):$(id -g) $HOME/.kube/config
 for i in "${NODEARRAY[@]}"
 do
   echo "Executing setup on worker node: $i"
-  ssh root@$i ARG1="0" ARG2="$i" 'bash -s' < ./setup-scripts/init-node.sh
+  ssh root@$i ARG1="0" ARG2="$i" 'bash -s' < ./init-node.sh
   ssh root@$i "$JOIN_CMD"
 done
 
@@ -41,5 +41,3 @@ echo "*                                   *"
 echo "*************************************"
 
 kubectl get nodes
-
-
