@@ -7,7 +7,7 @@ install_kubernetes() {
   echo "Checking if kubeadm is installed"
   if dpkg-query -W -f='${Status}' kubeadm | grep "ok installed"; then
     echo "Kubeadm is already installed, skipping setup"
-    exit 0
+    return
   fi
 
   # Add kubernetes packages to apt-get
@@ -39,7 +39,7 @@ install_docker() {
     # ensure it's started
     systemctl enable docker
     systemctl start docker
-    exit 0
+    return
   fi
 
   # install docker
@@ -60,7 +60,7 @@ configure_master() {
 
   # initialize kubernetes
   echo "Initializing kubernetes api server"
-  kubeadm init --apiserver-advertise-address=192.168.1.10 --pod-network-cidr=10.244.0.0/16
+  kubeadm init --apiserver-advertise-address=$ARG2 --pod-network-cidr=10.244.0.0/16
 
   # setup config for kubectl
   echo "Setting up kubectl on this node"
@@ -73,3 +73,13 @@ configure_master() {
   kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 }
 
+if [ "$ARG1" -eq "1" ]; then
+  echo "Initializing node $ARG2 as master"
+  install_kubernetes
+  install_docker
+  configure_master
+else
+  echo "Initialize node $ARG2 as a worker"
+  install_kubernetes
+  install_docker
+fi
