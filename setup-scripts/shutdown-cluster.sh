@@ -20,7 +20,7 @@ do
   NAME_ARRAY[i]=$TMP_NAME
 done
 
-read -p "Decomission master? [y/n]:" MASTER
+read -p "Decomission master? [y/n]: " MASTER
 if [[ $MASTER =~ ^[Yy]$ ]]; then
   read -p "Enter master address: " MASTER_ADDRESS
   read -p "Enter master node name: " MASTER_NAME

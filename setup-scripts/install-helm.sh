@@ -10,7 +10,7 @@ tar -zxvf helm-v2.14.3-linux-amd64.tar.gz
 rm helm-v2.14.3-linux-amd64.tar.gz
 
 # Installing on local machine
-mv -f linux-amd64/helm /usr/local/bin/helm
+mv -f linux-amd64/helm $HOME/bin
 rm -rf linux-amd64
 
 # Installing tiller into cluster

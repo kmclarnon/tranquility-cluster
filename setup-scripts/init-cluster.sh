@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+cd "$(dirname "${BASH_SOURCE[0]}")"
 
 declare NODEARRAY
 
@@ -19,7 +20,7 @@ echo "Executing setup on master node: $MASTER"
 ssh root@$MASTER ARG1="1" ARG2="$MASTER" 'bash -s' < ./init-node.sh
 
 # capture our join command
-JOIN_CMD=$(ssh root@$MASTER 'bash -s' < ./setup-scripts/print-token.sh)
+JOIN_CMD=$(ssh root@$MASTER 'bash -s' < ./print-token.sh)
 
 # setup this computer for access to the cluster via kubectl
 mkdir -p $HOME/.kube
@@ -34,15 +35,21 @@ do
   ssh root@$i "$JOIN_CMD"
 done
 
+echo ""
 echo "*************************************"
 echo "*                                   *"
 echo "*  Cluster Initialization Complete  *"
 echo "*                                   *"
 echo "*************************************"
+echo ""
 
 kubectl get nodes
 
 # Now that we have a cluster, lets do something with it
+chmod +x install-helm.sh
+chmod +x install-metallb.sh
+chmod +x install-nginx-ingress.sh
+
 ./install-helm.sh
 ./install-metallb.sh
 ./install-nginx-ingress.sh

@@ -7,7 +7,7 @@ echo "1. Bootstrap cluster"
 echo "2. Add node to cluster"
 echo "3. Decomission part of all of the cluster"
 
-read OPTION
+read -p "Choose a listed option: " OPTION
 
 if [ "$OPTION" -eq "1" ]; then
   setup-scripts/init-cluster.sh
