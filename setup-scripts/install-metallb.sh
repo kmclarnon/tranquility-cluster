@@ -10,4 +10,4 @@ kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.1/manifes
 
 # Install the config for metallb
 echo "Configuring metallb in layer2 mode for nginx-ingress"
-kubectl apply -f ../custom-objects/config-map-metallb.yaml
+kubectl apply -f ../custom-objects/metallb/config-map-metallb.yaml

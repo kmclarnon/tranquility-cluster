@@ -14,8 +14,8 @@ mv -f linux-amd64/helm $HOME/bin
 rm -rf linux-amd64
 
 # Installing tiller into cluster
-kubectl apply -f ../custom-objects/serviceaccount-tiller.yaml
-kubectl apply -f ../custom-objects/clusterrole-tiller.yaml
-kubectl apply -f ../custom-objects/clusterrolebinding-tiller.yaml
+kubectl apply -f ../custom-objects/tiller/serviceaccount-tiller.yaml
+kubectl apply -f ../custom-objects/tiller/clusterrole-tiller.yaml
+kubectl apply -f ../custom-objects/tiller/clusterrolebinding-tiller.yaml
 
 helm init --history-max 200 --service-account tiller
