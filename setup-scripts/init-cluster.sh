@@ -41,3 +41,8 @@ echo "*                                   *"
 echo "*************************************"
 
 kubectl get nodes
+
+# Now that we have a cluster, lets do something with it
+./install-helm.sh
+./install-metallb.sh
+./install-nginx-ingress.sh

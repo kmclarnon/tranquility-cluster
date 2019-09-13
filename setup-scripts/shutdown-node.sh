@@ -9,9 +9,10 @@ drain_node() {
 
 remove_kubeadm() {
   kubeadm reset -f
-  apt-get purge kubeadm kubectl kubelet kubernetes-cni kube*
-  apt-get auto-remove
+  apt-get purge --yes kubeadm kubectl kubelet kubernetes-cni kube*
+  apt-get auto-remove --yes
   rm -rf ~/.kube
+  rm -f /usr/local/bin/helm
 }
 
 if [ "$ARG1" -eq "1" ]; then
